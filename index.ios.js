@@ -14,20 +14,19 @@ var {
   NavigatorIOS,
 } = React;
 
-var _navigator;
-
 var TimerMixin = require('react-timer-mixin');
 
-var {MainScreen} = require('./src/MainScreen.js');
-var {StoryScreen} = require('./src/StoryScreen.js');
+var MainScreen = require('./src/MainScreen');
+var StoryScreen = require('./src/StoryScreen');
 
-var AwesomeProject = React.createClass({
-  
+var _navigator;
+
+var RCTZhiHuDaily = React.createClass({
   mixins: [TimerMixin],
 
   getInitialState: function() {
     return {
-      splashed: true,
+      splashed: false,
     };
   },
 
@@ -42,25 +41,30 @@ var AwesomeProject = React.createClass({
 
   RouteMapper: function(route, navigationOperations, onComponentRef) {
     _navigator = navigationOperations;
-
+    // return (
+    //   <View style={styles.container}>
+    //     <MainScreen navigator={navigationOperations}/>
+    //   </View>
+    // );
     if (route.name === 'home') {
       return (
         <View style={styles.container}>
-          <MainScreen />
+          <MainScreen navigator={navigationOperations}/>
         </View>
       );
     } else if (route.name === 'story') {
       return (
         <View style={styles.container}>
-          <StoryScreen />
+          <StoryScreen
+            style={{flex: 1}}
+            navigator={navigationOperations}
+            story={route.story} />
         </View>
       );
     }
   },
 
-
   render: function() {
-
     if (this.state.splashed) {
       var initialRoute = {name: 'home'};
       return (
@@ -75,7 +79,8 @@ var AwesomeProject = React.createClass({
           style={styles.container}
           initialRoute={initialRoute}
           configureScene={() => Navigator.SceneConfigs.FadeAndroid}
-          renderScene={this.RouteMapper}/>
+          renderScene={this.RouteMapper}
+        />
       );
       // return (
       //   <View style={styles.container}>
@@ -84,10 +89,9 @@ var AwesomeProject = React.createClass({
       // );
     } else {
       return (
-        <StoryScreen />
+        <SplashScreen />
       );
     }
-    
   }
 });
 
@@ -95,7 +99,6 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
 });
 
-AppRegistry.registerComponent('AwesomeProject', () => AwesomeProject);
+AppRegistry.registerComponent('RCTZhiHuDaily', () => RCTZhiHuDaily);
